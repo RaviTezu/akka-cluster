@@ -24,14 +24,13 @@ import (
 
 var cfgFile string
 
-// This represents the base command when called without any subcommands
+//RootCmd - This represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   "akka-cluster",
 	Short: "A wrapper around the actual akka-cluster command.",
 	Long: `A wrapper around the actual akka-cluster command.
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Instead of passing the node-hostname, JMX port over the command line.
+	This wrapper will read those values from a config(JSON) file.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },
@@ -53,7 +52,7 @@ func init() {
 	// Cobra supports Persistent Flags, which, if defined here,
 	// will be global for your application.
 
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.akka-cluster.yaml)")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.akka-cluster.json)")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
