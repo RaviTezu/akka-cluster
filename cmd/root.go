@@ -16,13 +16,14 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-
+	"github.com/go-ini/ini"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+	"os"
 )
 
 var cfgFile string
+var env string
+var node string
 
 //RootCmd - This represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -52,7 +53,10 @@ func init() {
 	// Cobra supports Persistent Flags, which, if defined here,
 	// will be global for your application.
 
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.akka-cluster.json)")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.akka-cluster.ini)")
+	RootCmd.PersistentFlags().StringVar(&env, "environment", "stage", "Environment to contact")
+	RootCmd.PersistentFlags().StringVar(&node, "node", "stage", "Environment to contact")
+
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
@@ -60,16 +64,11 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if cfgFile != "" { // enable ability to specify config file via flag
-		viper.SetConfigFile(cfgFile)
-	}
-
-	viper.SetConfigName(".akka-cluster") // name of config file (without extension)
-	viper.AddConfigPath("$HOME")         // adding home directory as first search path
-	viper.AutomaticEnv()                 // read in environment variables that match
-
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	if cfgFile != "" {
+		// enable ability to specify config file via flag
+		cfg, err := ini.Load(cfgFile)
+	} else {
+		//TODO: Make the default config file path to be accessible easily.
+		cfg, err := ini.Load(os.Getenv("HOME") + "/.akka-cluster.ini")
 	}
 }

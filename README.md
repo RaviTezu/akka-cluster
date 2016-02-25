@@ -28,5 +28,5 @@ Examples: bin/akka-cluster localhost 9999 is-available
 You don't need remember the JMX port or the exact node name to send a command to it.
 Usage: akka-cluster <command> --env <environment-name>
 
-Examples: akka-cluster leave --env stage --node <nodename>
-          akka-cluster join  --env stage --node <nodename>
+Examples: akka-cluster leave --env stage --node darkstar
+          akka-cluster join  --env prod  --node darkstarg
