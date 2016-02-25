@@ -14,3 +14,5 @@ func ParseINI(filename string) *ini.File {
 	}
 	return conf
 }
+
+func 
