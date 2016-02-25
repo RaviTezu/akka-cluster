@@ -54,21 +54,26 @@ func init() {
 	// will be global for your application.
 
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.akka-cluster.ini)")
-	RootCmd.PersistentFlags().StringVar(&env, "environment", "stage", "Environment to contact")
-	RootCmd.PersistentFlags().StringVar(&node, "node", "stage", "Environment to contact")
+	RootCmd.PersistentFlags().StringVar(&env, "env", "", "Environment to contact")
+	RootCmd.PersistentFlags().StringVar(&node, "node", "", "Node name to be used")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	//  RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
+	var cfg interface{}
+	var err error
 	if cfgFile != "" {
 		// enable ability to specify config file via flag
-		cfg, err := ini.Load(cfgFile)
+		cfg, err = ini.Load(cfgFile)
 	} else {
 		//TODO: Make the default config file path to be accessible easily.
-		cfg, err := ini.Load(os.Getenv("HOME") + "/.akka-cluster.ini")
+		cfg, err = ini.Load(os.Getenv("HOME") + "/.akka-cluster.ini")
+	}
+	if err == nil {
+		fmt.Println(cfg)
 	}
 }
