@@ -16,20 +16,23 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/go-ini/ini"
-	"github.com/spf13/cobra"
+	"log"
 	"os"
+	"strings"
+
+	"github.com/spf13/cobra"
 )
 
+const defaultCfgFile = "~/.akka-cluster.ini"
+
 var cfgFile string
-var env string
-var node string
 
 //RootCmd - This represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   "akka-cluster",
 	Short: "A wrapper around the actual akka-cluster command.",
 	Long: `A wrapper around the actual akka-cluster command.
+
 	Instead of passing the node-hostname, JMX port over the command line.
 	This wrapper will read those values from a config(.INI) file.`,
 	// Uncomment the following line if your bare application
@@ -48,15 +51,10 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-
 	// Here you will define your flags and configuration settings.
 	// Cobra supports Persistent Flags, which, if defined here,
 	// will be global for your application.
-
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.akka-cluster.ini)")
-	RootCmd.PersistentFlags().StringVar(&env, "env", "", "Environment to contact")
-	RootCmd.PersistentFlags().StringVar(&node, "node", "", "Node name to be used")
-
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	//  RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
@@ -64,16 +62,12 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	var cfg interface{}
-	var err error
-	if cfgFile != "" {
-		// enable ability to specify config file via flag
-		cfg, err = ini.Load(cfgFile)
-	} else {
-		//TODO: Make the default config file path to be accessible easily.
-		cfg, err = ini.Load(os.Getenv("HOME") + "/.akka-cluster.ini")
+	if cfgFile == "" {
+		cfgFile = os.Getenv("HOME") + strings.TrimLeft(defaultCfgFile, "~")
 	}
-	if err == nil {
-		fmt.Println(cfg)
+	fmt.Printf("Trying to load %s ... \n", cfgFile)
+	_, err := os.Stat(cfgFile)
+	if err != nil {
+		log.Panic(err)
 	}
 }

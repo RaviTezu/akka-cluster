@@ -16,32 +16,42 @@ package cmd
 
 import (
 	"fmt"
+	"os/exec"
+
+	"github.com/go-ini/ini"
 	"github.com/spf13/cobra"
 )
+
+var env string
+var node string
 
 // leaveCmd represents the leave command
 var leaveCmd = &cobra.Command{
 	Use:   "leave",
 	Short: "Sends a request for node to LEAVE the cluster",
-	Long: `Sends a request for node to LEAVE the cluster.
-  Takes the environment and the node name.`,
+	Long:  `Sends a request for node to LEAVE the cluster`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("leave called")
+		fmt.Println("Leave command called ...")
+	},
+	PostRun: func(cmd *cobra.Command, args []string) {
+		sections := ParseINI(cfgFile)
+		nodes, err := sections.Section(env).GetKey("nodes")
+		if err == nil {
+			fmt.Printf("Nodes found: %s", nodes)
+			runLeave(nodes)
+		}
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(leaveCmd)
+	leaveCmd.PersistentFlags().StringVar(&env, "env", "", "Environment to contact")
+	leaveCmd.PersistentFlags().StringVar(&node, "node", "", "Node name to be used")
+}
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// leaveCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// leaveCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
+func runLeave(nodes *ini.Key) {
+	out, err := exec.Command("uptime").Output()
+	if err == nil {
+		fmt.Printf("%s", out)
+	}
 }
