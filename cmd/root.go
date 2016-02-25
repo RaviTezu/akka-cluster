@@ -31,7 +31,7 @@ var RootCmd = &cobra.Command{
 	Short: "A wrapper around the actual akka-cluster command.",
 	Long: `A wrapper around the actual akka-cluster command.
 	Instead of passing the node-hostname, JMX port over the command line.
-	This wrapper will read those values from a config(JSON) file.`,
+	This wrapper will read those values from a config(.INI) file.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },
