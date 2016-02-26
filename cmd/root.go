@@ -66,9 +66,14 @@ func initConfig() {
 		//Remove the ~ and prefix the home directory of the current user.
 		cfgFile = os.Getenv("HOME") + strings.TrimLeft(defaultCfgFile, "~")
 	}
+	//TODO: Make sure, you are interpolating the ~ with user's home directory.
 	fmt.Printf("Trying to load %s ... \n", cfgFile)
 	_, err := os.Stat(cfgFile)
 	if err != nil {
 		log.Panic(err)
+	}
+	//TODO: Check the akka cli is installed and can be executed.
+	if !checkAkkaCLI() {
+		log.Panic("akka-cluster binary is not accessible or not installed on this machine.")
 	}
 }
