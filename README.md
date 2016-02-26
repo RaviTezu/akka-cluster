@@ -1,4 +1,4 @@
-# akka-cluster
+# akka-cluster-manager
 A wrapper around the akka-cluster Command Line Management: http://doc.akka.io/docs/akka/2.4.1/java/cluster-usage.html#cluster-command-line-java
 
 Following is the usage of akka-cluster Command Line Management usage:
