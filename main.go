@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/ravitezu/akka-cluster/cmd"
+import "github.com/ravitezu/akka-cluster-manager/cmd"
 
 func main() {
 	cmd.Execute()
